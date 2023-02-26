@@ -1,27 +1,42 @@
 import { ArrayOfBabyNames } from "./ArrayOfBabyNames";
+import { ListOfAllNames } from "./ListOfAllNames";
+import { useState } from "react";
 
 export const BabyNames = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const FilteredNames = () => {
+    return (
+      <ul>
+        {sortedBabyNames
+          .filter((item) =>
+            item.name.toLowerCase().includes(inputValue.toLowerCase())
+          )
+          .map((item) => {
+            return item.sex === "f" ? (
+              <p style={{ background: "#91f5cd" }}>{item.name}</p>
+            ) : (
+              <p style={{ background: "#36a47c" }}>{item.name}</p>
+            );
+          })}
+      </ul>
+    );
+  };
+
   return (
-    <div class="namesWrapper">
-      {sortedBabyNames
-        .sort((a, b) => a.name - b.name)
-        .map((item) => {
-          // if (item.sex === "f") {
-          //   return <h1 style={{ color: "pink" }}>{item.name}</h1>;
-          // } else {
-          //   return <h1 style={{ color: "blue" }}>{item.name}</h1>;
-          // }
-          return item.sex === "f" ? (
-            <p style={{ background: "#91f5cd" }}>Girl power... {item.name}</p>
-          ) : (
-            <p style={{ background: "#f9dda3" }}>{item.name}</p>
-          );
-        })}
+    <div className="namesWrapper">
+      <input type="text" onChange={handleInputChange} />
+      <label>Search</label>
+      {inputValue === "" ? <ListOfAllNames /> : <FilteredNames />}
     </div>
   );
 };
 
-const sortedBabyNames = ArrayOfBabyNames.sort((a, b) => {
+export const sortedBabyNames = ArrayOfBabyNames.sort((a, b) => {
   let fa = a.name,
     fb = b.name;
 
